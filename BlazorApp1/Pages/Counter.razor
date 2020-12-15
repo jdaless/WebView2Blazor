@@ -1,0 +1,39 @@
+﻿@page "/counter"
+@inject Data.EventService EventService
+@implements IDisposable
+<p>
+    <input @bind="currentValue" /> Current value: @currentValue
+</p>
+
+<p>
+    <input @bind="CurrentValue" /> Current value: @CurrentValue
+</p>
+<p>
+    <button @onclick="Clear">Clear</button>
+</p>
+<p>@EventService.Handled</p>
+
+@code {
+    private string currentValue;
+
+    private string CurrentValue { get => currentValue; set => currentValue = value; }
+
+    void Clear() => currentValue = null;
+
+    void Handle(object sender, EventArgs a)
+    {
+        EventService.Handled++;
+        InvokeAsync(StateHasChanged);
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        EventService.Event += Handle;
+        return base.OnInitializedAsync();
+    }
+
+    public void Dispose()
+    {
+        EventService.Event -= Handle;
+    }
+}
