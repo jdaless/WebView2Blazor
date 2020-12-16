@@ -23,6 +23,9 @@ namespace WebView
         public MainWindow()
         {
             InitializeComponent();
+            Closed += (s, a) => webView.ExecuteScriptAsync("window['Blazor'].disconnect()");
         }
+
+        
     }
 }
